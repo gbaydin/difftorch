@@ -3,5 +3,5 @@ language: python
 install:
   - pip install torch==1.5.0+cpu torchvision==0.6.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
 script:
-  - pip install .
+  - pip install .[dev]
   - sh tests/run_all.sh
