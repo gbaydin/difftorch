@@ -1,10 +1,7 @@
 sudo: false
 language: python
 install:
-  - pip install coverage
   - pip install torch==1.5.0+cpu torchvision==0.6.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
 script:
-  - pip install .[dev]
+  - pip install .
   - sh tests/run_all.sh
-after_success:
-  - codecov
