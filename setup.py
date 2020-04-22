@@ -31,7 +31,7 @@ setup(
     author_email='gunes@robots.ox.ac.uk',
     packages=find_packages(),
     install_requires=['torch>=1.0.0'],
-    extras_require={'dev': ['pytest', 'pytest-cov', 'pytest-xdist']},
+    extras_require={'dev': ['pytest', 'pytest-cov']},
     url='https://github.com/gbaydin/difftorch',
     classifiers=['License :: OSI Approved :: BSD License', 'Programming Language :: Python :: 3'],
     keywords='automatic differentiation autodiff pytorch',
