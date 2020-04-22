@@ -33,11 +33,11 @@ class APITestCase(unittest.TestCase):
 
     def fvect3vect3(self, x):
         r, theta, phi = x[0], x[1], x[2]
-        return torch.stack([r*(phi.sin())*(theta.cos()), r*(phi.sin())*(theta.sin()), r*phi.cos()])
+        return torch.stack([r*phi.sin()*theta.cos(), r*phi.sin()*theta.sin(), r*phi.cos()])
 
     def fvect3vect3Jacobian(self, x):
         r, theta, phi = x[0], x[1], x[2]
-        return torch.tensor([[(phi.sin())*(theta.cos()), -r*(phi.sin())*(theta.sin()), r*(phi.cos())*(theta.cos())], [(phi.sin())*(theta.sin()), r*(phi.sin())*(theta.cos()), r*(phi.cos())*(theta.sin())], [phi.cos(), 0., -r*phi.sin()]])
+        return torch.tensor([[phi.sin()*theta.cos(), -r*phi.sin()*theta.sin(), r*phi.cos()*theta.cos()], [phi.sin()*theta.sin(), r*phi.sin()*theta.cos(), r*phi.cos()*theta.sin()], [phi.cos(), 0., -r*phi.sin()]])
 
     def test_grad(self):
         x = torch.randn(2)
