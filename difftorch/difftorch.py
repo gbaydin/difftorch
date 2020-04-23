@@ -88,6 +88,7 @@ def gradv(f, x, v):
 
 # Hessian-vector product of vector-to-scalar function f, evaluated at x, with vector v
 def hessianv(f, x, v):
+    check_vector(x, 'x')    
     x = x.clone().requires_grad_()
     z = f(x)
     check_scalar(z, 'f(x)')
