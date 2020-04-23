@@ -79,6 +79,7 @@ def grad(f, x):
 
 # Gradient-vector product (directional derivative) of vector-to-scalar function f, evaluated at x, with vector v
 def gradv(f, x, v):
+    # Uses reverse-mode autodiff because forward-mode is not available in PyTorch
     check_vector(x, 'x')
     check_vector(v, 'v')
     g = grad(f, x)
