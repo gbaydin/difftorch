@@ -27,7 +27,7 @@ def jacobianTv(f, x, v):
     check_vector(v, 'v')
     x = x.clone().requires_grad_()
     z = f(x)
-    check_vector(z, 'z')
+    check_vector(z, 'f(x)')
     z.backward(v)
     return x.grad
 
@@ -37,7 +37,7 @@ def jacobian(f, x):
     check_vector(x, 'x')
     x = x.clone().requires_grad_()
     z = f(x)
-    check_vector(z, 'z')
+    check_vector(z, 'f(x)')
     j = []
     for i in range(z.nelement()):
         x.grad = None
@@ -62,7 +62,7 @@ def diff(f, x):
     check_scalar(x, 'x')
     x = x.clone().requires_grad_()
     z = f(x)
-    check_scalar(z, 'z')
+    check_scalar(z, 'f(x)')
     z.backward()
     return x.grad
 
@@ -72,7 +72,7 @@ def grad(f, x):
     check_vector(x, 'x')
     x = x.clone().requires_grad_()
     z = f(x)
-    check_scalar(z, 'z')
+    check_scalar(z, 'f(x)')
     z.backward()
     return x.grad
 
@@ -89,7 +89,7 @@ def gradv(f, x, v):
 def hessianv(f, x, v):
     x = x.clone().requires_grad_()
     z = f(x)
-    check_scalar(z, 'z')
+    check_scalar(z, 'f(x)')
     g, = torch.autograd.grad(z, x, create_graph=True, allow_unused=True)
     hv, = torch.autograd.grad(g, x, grad_outputs=v, allow_unused=True)
     return hv
@@ -114,7 +114,7 @@ def laplacian(f, x):
 def curl(f, x):
     j = jacobian(f, x)
     if j.shape[0] != 3 or j.shape[1] != 3:
-        raise RuntimeError('f should have a three-by-three Jacobian')
+        raise RuntimeError('f must have a three-by-three Jacobian')
     return torch.stack([j[2, 1] - j[1, 2], j[0, 2] - j[2, 0], j[1, 0] - j[0, 1]])
 
 
