@@ -23,7 +23,10 @@ git clone https://github.com/gbaydin/difftorch.git
 cd difftorch
 pip install .
 ```
-## Examples
+
+## Documentation
+
+Some example functions to demonstrate the operations:
 ```python
 import torch
 import difftorch
@@ -36,62 +39,117 @@ def f_spherical_cartesian(x):
     r, theta, phi = x[0], x[1], x[2]
     x, y, z = r*phi.sin()*theta.cos(), r*phi.sin()*theta.sin(), r*phi.cos()
     return torch.stack([x, y, z])
-    
-# grad
-# Gradient of vector-to-scalar function f, evaluated at x
-x = torch.randn(2)
-g = difftorch.grad(f_rosenbrock, x)
-print(x, g)
+```
 
-# gradv
+### gradv
+Gradient-vector product (directional derivative) of a vector-to-scalar function
+- f: vector-to-scalar function
+- x: vector argument to f(x) at which the gradient-vector product is evaluated
+- v: vector in the input domain of f
+
+```python
 # Gradient-vector product (directional derivative) of vector-to-scalar function f, evaluated at x, with vector v
 x, v = torch.randn(2), torch.randn(2)
 gv = difftorch.gradv(f_rosenbrock, x, v)
 print(x, v, gv)
+```
 
-# jacobian
-# Jacobian of vector-to-vector function f, evaluated at x
-x = torch.randn(3)
-j = difftorch.jacobian(f_spherical_cartesian, x)
-print(x, j)
+### grad
+Gradient of a vector-to-scalar function
+- f: vector-to-scalar function
+- x: vector argument to f(x) at which the gradient is evaluated
 
-# jacobianv
+```python
+# Gradient of vector-to-scalar function f, evaluated at x
+x = torch.randn(2)
+g = difftorch.grad(f_rosenbrock, x)
+print(x, g)
+```
+
+### jacobianv
+Jacobian-vector product of a vector-to-vector function
+- f: vector-to-vector function
+- x: vector argument to f(x) at which the Jacobian-vector product is evaluated
+- v: vector in the input domain of f
+```python
 # Jacobian-vector product of vector-to-vector function f, evaluated at x, with vector v
 x, v = torch.randn(3), torch.randn(3)
 jv = difftorch.jacobianv(f_spherical_cartesian, x, v)
 print(x, v, jv)
+```
 
-# jacobianTv
+### jacobianTv
+Transposed-Jacobian-vector (vector-Jacobian) product of a vector-to-vector function
+- f: vector-to-vector function
+- x: vector argument to f(x) at which the transposed-Jacobian-vector product is evaluated
+- v: vector in the output domain of f
+```python
 # Transposed-Jacobian-vector (vector-Jacobian) product of vector-to-vector function f, evaluated at x, with vector v
 x, v = torch.randn(3), torch.randn(3)
 jv = difftorch.jacobianTv(f_spherical_cartesian, x, v)
 print(x, v, jv)
+```
 
-# hessianv
+### jacobian
+Jacobian of a vector-to-vector function
+- f: vector-to-vector function
+- x: vector argument to f(x) at which the Jacobian is evaluated
+```python
+# Jacobian of vector-to-vector function f, evaluated at x
+x = torch.randn(3)
+j = difftorch.jacobian(f_spherical_cartesian, x)
+print(x, j)
+```
+
+### hessianv
+Hessian-vector product of a vector-to-scalar function
+- f: vector-to-scalar function
+- x: vector argument to f(x) at which the Hessian-vector product is evaluated
+- v: vector in the input domain of f
+```python
 # Hessian-vector product of vector-to-scalar function f, evaluated at x, with vector v
 x, v = torch.randn(2), torch.randn(2)
 hv = difftorch.hessianv(f_rosenbrock, x, v)
 print(x, v, hv)
+```
 
-# hessian
-# Hessian of vector-to-scalar function f, evaluated at x
+### hessian
+Hessian of a vector-to-scalar function
+- f: vector-to-scalar function
+- x: vector argument to f(x) at which the Hessian is evaluated
+```python
 x = torch.randn(2)
 h = difftorch.hessian(f_rosenbrock, x)
 print(x, h)
+```
 
-# laplacian
+### laplacian
+Laplacian of a vector-to-scalar function
+- f: vector-to-scalar function
+- x: vector argument to f(x) at which the Laplacian is evaluated
+```python
 # Laplacian of vector-to-scalar function f, evaluated at x
 x = torch.randn(2)
 l = difftorch.laplacian(f_rosenbrock, x)
 print(x, l)
+```
 
-# curl
+### curl
+Curl of a vector-to-vector function
+- f: vector-to-vector function
+- x: vector argument to f(x) at which the curl is evaluated
+```python
 # Curl of vector-to-vector function f, evaluated at x
 x = torch.randn(3)
 c = difftorch.curl(f_spherical_cartesian, x)
 print(x, c)
+```
 
-# div
+### div
+Divergence of a vector-to-vector function
+- f: vector-to-vector function
+- x: vector argument to f(x) at which the divergence is evaluated
+```python
 # Divergence of vector-to-vector function f, evaluated at x
 x = torch.randn(3)
 d = difftorch.div(f_spherical_cartesian, x)
