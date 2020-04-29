@@ -168,3 +168,5 @@ A version of jacobianTv that supports functions f of multiple Tensor arguments a
 - x: a Tensor, list of Tensors or tuple of Tensors in the input domain of f
 - v: a Tensor, list of Tensors or tuple of Tensors in the output domain of f
 
+## License
+difftorch is distributed under the BSD License.
