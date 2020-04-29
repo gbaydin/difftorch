@@ -155,3 +155,16 @@ x = torch.randn(3)
 d = difftorch.div(f_spherical_cartesian, x)
 print(x, d)
 ```
+
+### generic_jacobianv
+A version of jacobianv that supports functions f of multiple Tensor arguments and multiple Tensor outputs
+- f: a function that takes as input a Tensor, list of Tensors or tuple of Tensors, and outputs a Tensor, list of Tensors or tuple of Tensors
+- x: a Tensor, list of Tensors or tuple of Tensors in the input domain of f
+- v: a Tensor, list of Tensors or tuple of Tensors in the input domain of f
+
+### generic_jacobianTv
+A version of jacobianTv that supports functions f of multiple Tensor arguments and multiple Tensor outputs
+- f: a function that takes as input a Tensor, list of Tensors or tuple of Tensors, and outputs a Tensor, list of Tensors or tuple of Tensors
+- x: a Tensor, list of Tensors or tuple of Tensors in the input domain of f
+- v: a Tensor, list of Tensors or tuple of Tensors in the output domain of f
+
