@@ -2,7 +2,7 @@
 [![Build Status](https://travis-ci.org/gbaydin/difftorch.svg?branch=master)](https://travis-ci.org/gbaydin/difftorch)
 [![PyPI version](https://badge.fury.io/py/difftorch.svg)](https://badge.fury.io/py/difftorch)
 
-difftorch is a little library providing a functional differentiation API for [PyTorch](https://pytorch.org/). The operations it implements mirror those available in [DiffSharp](https://github.com/DiffSharp/DiffSharp).
+difftorch is a functional differentiation API for [PyTorch](https://pytorch.org/). The operations it implements mirror those available in [DiffSharp](https://github.com/DiffSharp/DiffSharp).
 
 
 ## Installation
