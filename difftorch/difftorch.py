@@ -135,7 +135,7 @@ def div(f, x):
     return j.trace()
 
 
-# A version of jacobianv that supports functions f of multiple Tensor arguments and multiple Tensor outputs
+# A version of jacobianv that supports functions f of multiple Tensor arguments and with multiple Tensor outputs
 # f: a function that takes as input a Tensor, list of Tensors or tuple of Tensors, and outputs a Tensor, list of Tensors or tuple of Tensors
 # x: a Tensor, list of Tensors or tuple of Tensors in the input domain of f
 # v: a Tensor, list of Tensors or tuple of Tensors in the input domain of f
@@ -143,7 +143,7 @@ def generic_jacobianv(f, x, v):
     return util.unflatten_as(jacobianv(lambda xx: util.flatten(f(*util.unflatten_as(xx, x))), util.flatten(x), util.flatten(v)), f(*x))
 
 
-# A version of jacobianTv that supports functions f of multiple Tensor arguments and multiple Tensor outputs
+# A version of jacobianTv that supports functions f of multiple Tensor arguments and with multiple Tensor outputs
 # f: a function that takes as input a Tensor, list of Tensors or tuple of Tensors, and outputs a Tensor, list of Tensors or tuple of Tensors
 # x: a Tensor, list of Tensors or tuple of Tensors in the input domain of f
 # v: a Tensor, list of Tensors or tuple of Tensors in the output domain of f
