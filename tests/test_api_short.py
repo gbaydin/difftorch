@@ -39,198 +39,142 @@ class APITestCase(unittest.TestCase):
         r, theta, phi = x[0], x[1], x[2]
         return torch.tensor([[phi.sin()*theta.cos(), -r*phi.sin()*theta.sin(), r*phi.cos()*theta.cos()], [phi.sin()*theta.sin(), r*phi.sin()*theta.cos(), r*phi.cos()*theta.sin()], [phi.cos(), 0., -r*phi.sin()]])
 
-    def test_grad(self):
+    def test_g(self):
         x = torch.randn(2)
-        g = dtorch.grad(self.rosenbrock, x)
+        g = dtorch.g(self.rosenbrock, x)
         gCorrect = self.rosenbrockGrad(x)
         self.assertTrue(gCorrect.allclose(g))
 
-    def test_fgrad(self):
+    def test_fg(self):
         x = torch.randn(2)
-        z, g = dtorch.fgrad(self.rosenbrock, x)
+        z, g = dtorch.fg(self.rosenbrock, x)
         gCorrect = self.rosenbrockGrad(x)
         zCorrect = self.rosenbrock(x)
         self.assertTrue(gCorrect.allclose(g))
         self.assertTrue(zCorrect.allclose(z))
 
-    def test_gradv(self):
+    def test_gvp(self):
         x = torch.randn(2)
         v = torch.randn(2)
-        gv = dtorch.gradv(self.rosenbrock, x, v)
+        gv = dtorch.gvp(self.rosenbrock, x, v)
         gvCorrect = torch.dot(self.rosenbrockGrad(x), v)
         self.assertTrue(gvCorrect.allclose(gv))
 
-    def test_fgradv(self):
+    def test_fgvp(self):
         x = torch.randn(2)
         v = torch.randn(2)
-        z, gv = dtorch.fgradv(self.rosenbrock, x, v)
+        z, gv = dtorch.fgvp(self.rosenbrock, x, v)
         gvCorrect = torch.dot(self.rosenbrockGrad(x), v)
         zCorrect = self.rosenbrock(x)
         self.assertTrue(gvCorrect.allclose(gv))
         self.assertTrue(zCorrect.allclose(z))
 
-    def test_diff(self):
-        x = torch.randn(1)[0]
-        d = dtorch.diff(torch.sin, x)
-        dCorrect = torch.cos(x)
-        self.assertTrue(dCorrect.allclose(d))
-
-    def test_fdiff(self):
-        x = torch.randn(1)[0]
-        z, d = dtorch.fdiff(torch.sin, x)
-        dCorrect = torch.cos(x)
-        zCorrect = torch.sin(x)
-        self.assertTrue(dCorrect.allclose(d))
-        self.assertTrue(zCorrect.allclose(z))
-
-    def test_jacobian(self):
+    def test_j(self):
         x = torch.randn(2)
-        j = dtorch.jacobian(self.fvect2vect2, x)
+        j = dtorch.j(self.fvect2vect2, x)
         jCorrect = self.fvect2vect2Jacobian(x)
         self.assertTrue(jCorrect.allclose(j))
 
         x = torch.randn(3)
-        j = dtorch.jacobian(self.fvect3vect3, x)
+        j = dtorch.j(self.fvect3vect3, x)
         jCorrect = self.fvect3vect3Jacobian(x)
         self.assertTrue(jCorrect.allclose(j))
 
         x = torch.randn(3)
-        j = dtorch.jacobian(self.fvect3vect4, x)
+        j = dtorch.j(self.fvect3vect4, x)
         jCorrect = self.fvect3vect4Jacobian(x)
         self.assertTrue(jCorrect.allclose(j))
 
-    def test_fjacobian(self):
+    def test_fj(self):
         x = torch.randn(3)
-        z, j = dtorch.fjacobian(self.fvect3vect4, x)
+        z, j = dtorch.fj(self.fvect3vect4, x)
         jCorrect = self.fvect3vect4Jacobian(x)
         zCorrect = self.fvect3vect4(x)
         self.assertTrue(jCorrect.allclose(j))
         self.assertTrue(zCorrect.allclose(z))
 
-    def test_jacobianv(self):
+    def test_jvp(self):
         x = torch.randn(2)
         v = torch.randn(2)
-        jv = dtorch.jacobianv(self.fvect2vect2, x, v)
+        jv = dtorch.jvp(self.fvect2vect2, x, v)
         jvCorrect = torch.matmul(self.fvect2vect2Jacobian(x), v)
         self.assertTrue(jvCorrect.allclose(jv))
 
         x = torch.randn(3)
         v = torch.randn(3)
-        jv = dtorch.jacobianv(self.fvect3vect3, x, v)
+        jv = dtorch.jvp(self.fvect3vect3, x, v)
         jvCorrect = torch.matmul(self.fvect3vect3Jacobian(x), v)
         self.assertTrue(jvCorrect.allclose(jv))
 
         x = torch.randn(3)
         v = torch.randn(3)
-        jv = dtorch.jacobianv(self.fvect3vect4, x, v)
+        jv = dtorch.jvp(self.fvect3vect4, x, v)
         jvCorrect = torch.matmul(self.fvect3vect4Jacobian(x), v)
         self.assertTrue(jvCorrect.allclose(jv))
 
-    def test_fjacobianv(self):
+    def test_fjvp(self):
         x = torch.randn(3)
         v = torch.randn(3)
-        z, jv = dtorch.fjacobianv(self.fvect3vect4, x, v)
+        z, jv = dtorch.fjvp(self.fvect3vect4, x, v)
         jvCorrect = torch.matmul(self.fvect3vect4Jacobian(x), v)
         zCorrect = self.fvect3vect4(x)
         self.assertTrue(jvCorrect.allclose(jv))
         self.assertTrue(zCorrect.allclose(z))
 
-    def test_jacobianTv(self):
+    def test_vjp(self):
         x = torch.randn(2)
         v = torch.randn(2)
-        jv = dtorch.jacobianTv(self.fvect2vect2, x, v)
+        jv = dtorch.vjp(self.fvect2vect2, x, v)
         jvCorrect = torch.matmul(v, self.fvect2vect2Jacobian(x))
         self.assertTrue(jvCorrect.allclose(jv))
 
         x = torch.randn(3)
         v = torch.randn(3)
-        jv = dtorch.jacobianTv(self.fvect3vect3, x, v)
+        jv = dtorch.vjp(self.fvect3vect3, x, v)
         jvCorrect = torch.matmul(v, self.fvect3vect3Jacobian(x))
         self.assertTrue(jvCorrect.allclose(jv))
 
         x = torch.randn(3)
         v = torch.randn(4)
-        jv = dtorch.jacobianTv(self.fvect3vect4, x, v)
+        jv = dtorch.vjp(self.fvect3vect4, x, v)
         jvCorrect = torch.matmul(v, self.fvect3vect4Jacobian(x))
         self.assertTrue(jvCorrect.allclose(jv))
 
-    def test_fjacobianTv(self):
+    def test_fvjp(self):
         x = torch.randn(3)
         v = torch.randn(4)
-        z, jv = dtorch.fjacobianTv(self.fvect3vect4, x, v)
+        z, jv = dtorch.fvjp(self.fvect3vect4, x, v)
         jvCorrect = torch.matmul(v, self.fvect3vect4Jacobian(x))
         zCorrect = self.fvect3vect4(x)
         self.assertTrue(jvCorrect.allclose(jv))
         self.assertTrue(zCorrect.allclose(z))
 
-    def test_hessian(self):
+    def test_h(self):
         x = torch.randn(2)
-        h = dtorch.hessian(self.rosenbrock, x)
+        h = dtorch.h(self.rosenbrock, x)
         hCorrect = self.rosenbrockHessian(x)
         self.assertTrue(hCorrect.allclose(h))
 
-    def test_fhessian(self):
+    def test_fh(self):
         x = torch.randn(2)
-        z, h = dtorch.fhessian(self.rosenbrock, x)
+        z, h = dtorch.fh(self.rosenbrock, x)
         hCorrect = self.rosenbrockHessian(x)
         zCorrect = self.rosenbrock(x)
         self.assertTrue(hCorrect.allclose(h))
         self.assertTrue(zCorrect.allclose(z))
 
-    def test_hessianv(self):
+    def test_hvp(self):
         x = torch.randn(2)
         v = torch.randn(2)
-        hv = dtorch.hessianv(self.rosenbrock, x, v)
+        hv = dtorch.hvp(self.rosenbrock, x, v)
         hvCorrect = torch.matmul(self.rosenbrockHessian(x), v)
         self.assertTrue(hvCorrect.allclose(hv))
 
-    def test_fhessianv(self):
+    def test_fhvp(self):
         x = torch.randn(2)
         v = torch.randn(2)
-        z, hv = dtorch.fhessianv(self.rosenbrock, x, v)
+        z, hv = dtorch.fhvp(self.rosenbrock, x, v)
         hvCorrect = torch.matmul(self.rosenbrockHessian(x), v)
         zCorrect = self.rosenbrock(x)
         self.assertTrue(hvCorrect.allclose(hv))
-        self.assertTrue(zCorrect.allclose(z))
-
-    def test_laplacian(self):
-        x = torch.randn(2)
-        ll = dtorch.laplacian(self.rosenbrock, x)
-        lCorrect = self.rosenbrockHessian(x).trace()
-        self.assertTrue(lCorrect.allclose(ll))
-
-    def test_flaplacian(self):
-        x = torch.randn(2)
-        z, ll = dtorch.flaplacian(self.rosenbrock, x)
-        lCorrect = self.rosenbrockHessian(x).trace()
-        zCorrect = self.rosenbrock(x)
-        self.assertTrue(lCorrect.allclose(ll))
-        self.assertTrue(zCorrect.allclose(z))
-
-    def test_curl(self):
-        x = torch.tensor([1.5, 2.5, 0.2])
-        c = dtorch.curl(self.fvect3vect3, x)
-        cCorrect = torch.tensor([-0.879814, -2.157828, 0.297245])
-        self.assertTrue(cCorrect.allclose(c))
-
-    def test_fcurl(self):
-        x = torch.tensor([1.5, 2.5, 0.2])
-        z, c = dtorch.fcurl(self.fvect3vect3, x)
-        cCorrect = torch.tensor([-0.879814, -2.157828, 0.297245])
-        zCorrect = self.fvect3vect3(x)
-        self.assertTrue(cCorrect.allclose(c))
-        self.assertTrue(zCorrect.allclose(z))
-
-    def test_div(self):
-        x = torch.tensor([1.5, 2.5, 0.2])
-        d = dtorch.div(self.fvect3vect3, x)
-        dCorrect = torch.tensor(-0.695911)
-        self.assertTrue(dCorrect.allclose(d))
-
-    def test_fdiv(self):
-        x = torch.tensor([1.5, 2.5, 0.2])
-        z, d = dtorch.fdiv(self.fvect3vect3, x)
-        dCorrect = torch.tensor(-0.695911)
-        zCorrect = self.fvect3vect3(x)
-        self.assertTrue(dCorrect.allclose(d))
         self.assertTrue(zCorrect.allclose(z))

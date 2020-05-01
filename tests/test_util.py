@@ -13,3 +13,11 @@ class UtilTestCase(unittest.TestCase):
         f = util.flatten((x, y))
         f2 = util.flatten(util.unflatten_as(f, (x, y)))
         self.assertTrue(f.allclose(f2))
+
+    def test_unzip(self):
+        lst = [(1, 2), (3, 4), (8, 9)]
+        l1, l2 = util.unzip(lst)
+        l1Correct = (1, 3, 8)
+        l2Correct = (2, 4, 9)
+        self.assertEqual(l1Correct, l1)
+        self.assertEqual(l2Correct, l2)

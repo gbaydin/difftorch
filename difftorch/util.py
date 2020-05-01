@@ -22,6 +22,10 @@ def onehot_like(x, i):
     return ret
 
 
+def unzip(lst):
+    return zip(*lst)
+
+
 def check_tensor(value):
     if not torch.is_tensor(value):
         raise ValueError('Expecting value to be a tensor')
