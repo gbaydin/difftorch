@@ -2,9 +2,9 @@ import torch
 from . import util
 
 
-# Original value and transposed-Jacobian-vector (vector-Jacobian) product of a vector-to-vector function
+# Value and transposed-Jacobian-vector (vector-Jacobian) product of a vector-to-vector function
 # f: vector-to-vector function
-# x: vector argument to f(x) at which the transposed-Jacobian-vector product is evaluated
+# x: vector argument to f at which f(x) and the transposed-Jacobian-vector product is evaluated
 # v: vector in the output domain of f
 def fjacobianTv(f, x, v):
     if torch.is_tensor(x) and torch.is_tensor(v):
@@ -21,13 +21,13 @@ def fjacobianTv(f, x, v):
 
 # Transposed-Jacobian-vector (vector-Jacobian) product of a vector-to-vector function
 # f: vector-to-vector function
-# x: vector argument to f(x) at which the transposed-Jacobian-vector product is evaluated
+# x: vector argument to f at which the transposed-Jacobian-vector product is evaluated
 # v: vector in the output domain of f
 def jacobianTv(f, x, v):
     return fjacobianTv(f, x, v)[1]
 
 
-# A version of jacobianTv that supports functions f of multiple Tensor arguments and with multiple Tensor outputs
+# A version of fjacobianTv that supports functions f of multiple Tensor arguments and with multiple Tensor outputs
 # f: a function that takes as input a Tensor, list of Tensors or tuple of Tensors, and outputs a Tensor, list of Tensors or tuple of Tensors
 # x: a Tensor, list of Tensors or tuple of Tensors in the input domain of f
 # v: a Tensor, list of Tensors or tuple of Tensors in the output domain of f
@@ -44,9 +44,9 @@ def generic_jacobianTv(f, x, v):
     return generic_fjacobianTv(f, x, v)[1]
 
 
-# Original value and Jacobian of a vector-to-vector function
+# Value and Jacobian of a vector-to-vector function
 # f: vector-to-vector function
-# x: vector argument to f(x) at which the Jacobian is evaluated
+# x: vector argument to f at which f(x) and the Jacobian is evaluated
 def fjacobian(f, x):
     util.check_vector(x, 'x')
     x = x.clone().requires_grad_()
@@ -63,14 +63,14 @@ def fjacobian(f, x):
 
 # Jacobian of a vector-to-vector function
 # f: vector-to-vector function
-# x: vector argument to f(x) at which the Jacobian is evaluated
+# x: vector argument to f at which the Jacobian is evaluated
 def jacobian(f, x):
     return fjacobian(f, x)[1]
 
 
-# Original value and Jacobian-vector product of a vector-to-vector function
+# Value and Jacobian-vector product of a vector-to-vector function
 # f: vector-to-vector function
-# x: vector argument to f(x) at which the Jacobian-vector product is evaluated
+# x: vector argument to f at which f(x) and the Jacobian-vector product is evaluated
 # v: vector in the input domain of f
 def fjacobianv(f, x, v):
     # Uses reverse-mode autodiff because forward-mode is not available in PyTorch
@@ -86,13 +86,13 @@ def fjacobianv(f, x, v):
 
 # Jacobian-vector product of a vector-to-vector function
 # f: vector-to-vector function
-# x: vector argument to f(x) at which the Jacobian-vector product is evaluated
+# x: vector argument to f at which the Jacobian-vector product is evaluated
 # v: vector in the input domain of f
 def jacobianv(f, x, v):
     return fjacobianv(f, x, v)[1]
 
 
-# A version of jacobianv that supports functions f of multiple Tensor arguments and with multiple Tensor outputs
+# A version of fjacobianv that supports functions f of multiple Tensor arguments and with multiple Tensor outputs
 # f: a function that takes as input a Tensor, list of Tensors or tuple of Tensors, and outputs a Tensor, list of Tensors or tuple of Tensors
 # x: a Tensor, list of Tensors or tuple of Tensors in the input domain of f
 # v: a Tensor, list of Tensors or tuple of Tensors in the input domain of f
@@ -109,9 +109,9 @@ def generic_jacobianv(f, x, v):
     return generic_fjacobianv(f, x, v)[1]
 
 
-# Original value and derivative of a scalar-to-scalar function
+# Value and derivative of a scalar-to-scalar function
 # f: scalar-to-scalar function
-# x: scalar argument to f(x) at which the derivative is evaluated
+# x: scalar argument to f at which f(x) and the derivative is evaluated
 def fdiff(f, x):
     util.check_scalar(x, 'x')
     x = x.clone().requires_grad_()
@@ -123,14 +123,14 @@ def fdiff(f, x):
 
 # Derivative of a scalar-to-scalar function
 # f: scalar-to-scalar function
-# x: scalar argument to f(x) at which the derivative is evaluated
+# x: scalar argument to f at which the derivative is evaluated
 def diff(f, x):
     return fdiff(f, x)[1]
 
 
-# Original value and gradient of a vector-to-scalar function
+# Value and gradient of a vector-to-scalar function
 # f: vector-to-scalar function
-# x: vector argument to f(x) at which the gradient is evaluated
+# x: vector argument to f at which f(x) and the gradient is evaluated
 def fgrad(f, x):
     util.check_vector(x, 'x')
     x = x.clone().requires_grad_()
@@ -142,14 +142,14 @@ def fgrad(f, x):
 
 # Gradient of a vector-to-scalar function
 # f: vector-to-scalar function
-# x: vector argument to f(x) at which the gradient is evaluated
+# x: vector argument to f at which the gradient is evaluated
 def grad(f, x):
     return fgrad(f, x)[1]
 
 
-# Original value and gradient-vector product (directional derivative) of a vector-to-scalar function
+# Value and gradient-vector product (directional derivative) of a vector-to-scalar function
 # f: vector-to-scalar function
-# x: vector argument to f(x) at which the gradient-vector product is evaluated
+# x: vector argument to f at which f(x) and the gradient-vector product is evaluated
 # v: vector in the input domain of f
 def fgradv(f, x, v):
     # Uses reverse-mode autodiff because forward-mode is not available in PyTorch
@@ -161,7 +161,7 @@ def fgradv(f, x, v):
 
 # Gradient-vector product (directional derivative) of a vector-to-scalar function
 # f: vector-to-scalar function
-# x: vector argument to f(x) at which the gradient-vector product is evaluated
+# x: vector argument to f at which the gradient-vector product is evaluated
 # v: vector in the input domain of f
 def gradv(f, x, v):
     return fgradv(f, x, v)[1]
@@ -169,7 +169,7 @@ def gradv(f, x, v):
 
 # Value and Hessian-vector product of a vector-to-scalar function
 # f: vector-to-scalar function
-# x: vector argument to f(x) at which the Hessian-vector product is evaluated
+# x: vector argument to f at which f(x) and the Hessian-vector product is evaluated
 # v: vector in the input domain of f
 def fhessianv(f, x, v):
     util.check_vector(x, 'x')
@@ -183,15 +183,15 @@ def fhessianv(f, x, v):
 
 # Hessian-vector product of a vector-to-scalar function
 # f: vector-to-scalar function
-# x: vector argument to f(x) at which the Hessian-vector product is evaluated
+# x: vector argument to f at which the Hessian-vector product is evaluated
 # v: vector in the input domain of f
 def hessianv(f, x, v):
     return fhessianv(f, x, v)[1]
 
 
-# Hessian of a vector-to-scalar function
+# Value and Hessian of a vector-to-scalar function
 # f: vector-to-scalar function
-# x: vector argument to f(x) at which the Hessian is evaluated
+# x: vector argument to f at which f(x) and the Hessian is evaluated
 def fhessian(f, x):
     util.check_vector(x, 'x')
     z0, hv0 = fhessianv(f, x, util.onehot_like(x, 0))
@@ -204,14 +204,14 @@ def fhessian(f, x):
 
 # Hessian of a vector-to-scalar function
 # f: vector-to-scalar function
-# x: vector argument to f(x) at which the Hessian is evaluated
+# x: vector argument to f at which Hessian is evaluated
 def hessian(f, x):
     return fhessian(f, x)[1]
 
 
-# Laplacian of a vector-to-scalar function
+# Value and Laplacian of a vector-to-scalar function
 # f: vector-to-scalar function
-# x: vector argument to f(x) at which the Laplacian is evaluated
+# x: vector argument to f at which f(x) and the Laplacian is evaluated
 def flaplacian(f, x):
     z, h = fhessian(f, x)
     return z, h.trace()
@@ -219,14 +219,14 @@ def flaplacian(f, x):
 
 # Laplacian of a vector-to-scalar function
 # f: vector-to-scalar function
-# x: vector argument to f(x) at which the Laplacian is evaluated
+# x: vector argument to f at which the Laplacian is evaluated
 def laplacian(f, x):
     return flaplacian(f, x)[1]
 
 
-# Curl of a vector-to-vector function
+# Value and curl of a vector-to-vector function
 # f: vector-to-vector function
-# x: vector argument to f(x) at which the curl is evaluated
+# x: vector argument to f at which f(x) and the curl is evaluated
 def fcurl(f, x):
     z, j = fjacobian(f, x)
     if j.shape[0] != 3 or j.shape[1] != 3:
@@ -236,14 +236,14 @@ def fcurl(f, x):
 
 # Curl of a vector-to-vector function
 # f: vector-to-vector function
-# x: vector argument to f(x) at which the curl is evaluated
+# x: vector argument to f at which the curl is evaluated
 def curl(f, x):
     return fcurl(f, x)[1]
 
 
-# Divergence of a vector-to-vector function
+# Value and divergence of a vector-to-vector function
 # f: vector-to-vector function
-# x: vector argument to f(x) at which the divergence is evaluated
+# x: vector argument to f at which f(x) and the divergence is evaluated
 def fdiv(f, x):
     z, j = fjacobian(f, x)
     if j.shape[0] != j.shape[1]:
@@ -253,7 +253,7 @@ def fdiv(f, x):
 
 # Divergence of a vector-to-vector function
 # f: vector-to-vector function
-# x: vector argument to f(x) at which the divergence is evaluated
+# x: vector argument to f at which the divergence is evaluated
 def div(f, x):
     return fdiv(f, x)[1]
 
