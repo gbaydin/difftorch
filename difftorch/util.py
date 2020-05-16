@@ -16,6 +16,11 @@ def check_scalar(x, name):
         raise RuntimeError('{} needs to be a scalar (zero-dimensional Tensor)'.format(name))
 
 
+def check_same_shape(x, xname, y, yname):
+    if x.shape != y.shape:
+        raise RuntimeError('Expecting {}.shape ({}) and {}.shape ({}) to be the same'.format(xname, x.shape, yname, y.shape))
+
+
 def onehot_like(x, i):
     ret = torch.zeros_like(x)
     ret[i] = 1.

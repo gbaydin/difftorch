@@ -8,15 +8,16 @@ from . import util
 # v: vector in the output domain of f
 def fjacobianTv(f, x, v):
     if torch.is_tensor(x) and torch.is_tensor(v):
-        util.check_vector(x, 'x')
-        util.check_vector(v, 'v')
-        x = x.clone().requires_grad_()
-        z = f(x)
-        util.check_vector(z, 'f(x)')
-        z.backward(v)
-        return z, x.grad
-    else:
-        return generic_fjacobianTv(f, x, v)
+        if x.dim() == 1 and v.dim() == 1:
+            # util.check_vector(x, 'x')
+            # util.check_vector(v, 'v')
+            x = x.clone().requires_grad_()
+            z = f(x)
+            # util.check_vector(z, 'f(x)')
+            util.check_same_shape(z, 'z', v, 'v')
+            z.backward(v)
+            return z, x.grad
+    return generic_fjacobianTv(f, x, v)
 
 
 # Transposed-Jacobian-vector (vector-Jacobian) product of a vector-to-vector function
@@ -32,8 +33,15 @@ def jacobianTv(f, x, v):
 # x: a Tensor, list of Tensors or tuple of Tensors in the input domain of f
 # v: a Tensor, list of Tensors or tuple of Tensors in the output domain of f
 def generic_fjacobianTv(f, x, v):
-    z = f(*util.unflatten_as(util.flatten(x), x))
-    return z, util.unflatten_as(jacobianTv(lambda xx: util.flatten(f(*util.unflatten_as(xx, x))), util.flatten(x), util.flatten(v)), x)
+    xx = util.unflatten_as(util.flatten(x), x)
+    z = f(xx) if torch.is_tensor(xx) else f(*xx)
+
+    def genericf(xx):
+        xxx = util.unflatten_as(xx, x)
+        ff = f(xxx) if torch.is_tensor(xxx) else f(*xxx)
+        return util.flatten(ff)
+
+    return z, util.unflatten_as(jacobianTv(genericf, util.flatten(x), util.flatten(v)), x)
 
 
 # A version of jacobianTv that supports functions f of multiple Tensor arguments and with multiple Tensor outputs
@@ -76,12 +84,13 @@ def fjacobianv(f, x, v):
     # Uses reverse-mode autodiff because forward-mode is not available in PyTorch
     # Another (and potentially faster) alternative is to use the "double backwards trick"
     if torch.is_tensor(x) and torch.is_tensor(v):
-        util.check_vector(x, 'x')
-        util.check_vector(v, 'v')
-        z, j = fjacobian(f, x)
-        return z, torch.matmul(j, v)
-    else:
-        return generic_fjacobianv(f, x, v)
+        if x.dim() == 1 and v.dim() == 1:
+            # util.check_vector(x, 'x')
+            # util.check_vector(v, 'v')
+            util.check_same_shape(x, 'x', v, 'v')
+            z, j = fjacobian(f, x)
+            return z, torch.matmul(j, v)
+    return generic_fjacobianv(f, x, v)
 
 
 # Jacobian-vector product of a vector-to-vector function
@@ -97,8 +106,15 @@ def jacobianv(f, x, v):
 # x: a Tensor, list of Tensors or tuple of Tensors in the input domain of f
 # v: a Tensor, list of Tensors or tuple of Tensors in the input domain of f
 def generic_fjacobianv(f, x, v):
-    z = f(*util.unflatten_as(util.flatten(x), x))
-    return z, util.unflatten_as(jacobianv(lambda xx: util.flatten(f(*util.unflatten_as(xx, x))), util.flatten(x), util.flatten(v)), z)
+    xx = util.unflatten_as(util.flatten(x), x)
+    z = f(xx) if torch.is_tensor(xx) else f(*xx)
+
+    def genericf(xx):
+        xxx = util.unflatten_as(xx, x)
+        ff = f(xxx) if torch.is_tensor(xxx) else f(*xxx)
+        return util.flatten(ff)
+
+    return z, util.unflatten_as(jacobianv(genericf, util.flatten(x), util.flatten(v)), z)
 
 
 # A version of jacobianv that supports functions f of multiple Tensor arguments and with multiple Tensor outputs

@@ -1,4 +1,4 @@
-__version__ = '1.2.0'
+__version__ = '1.2.1'
 
 from .difftorch import grad, gradv, jacobianTv, jacobianv, jacobian, hessian, hessianv, laplacian, div, curl, diff
 from .difftorch import fgrad, fgradv, fjacobianTv, fjacobianv, fjacobian, fhessian, fhessianv, flaplacian, fdiv, fcurl, fdiff
