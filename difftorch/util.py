@@ -45,17 +45,17 @@ def check_list_or_tuple_of_tensors(value):
 
 def flatten(tensors):
     if torch.is_tensor(tensors):
-        return tensors.view(-1)
+        return tensors.reshape(-1)
     check_list_or_tuple_of_tensors(tensors)
-    return torch.cat([t.view(-1) for t in tensors])
+    return torch.cat([t.reshape(-1) for t in tensors])
 
 
 def unflatten_as(tensor, tensors):
     if torch.is_tensor(tensors):
-        return tensor.view(tensors.shape)
+        return tensor.reshape(tensors.shape)
     check_tensor(tensor)
     check_list_or_tuple_of_tensors(tensors)
     shapes = [t.shape for t in tensors]
     nelements = [t.nelement() for t in tensors]
-    ts = torch.split(tensor.view(-1), nelements)
-    return [ts[i].view(shapes[i]) for i in range(len(tensors))]
+    ts = torch.split(tensor.reshape(-1), nelements)
+    return [ts[i].reshape(shapes[i]) for i in range(len(tensors))]
